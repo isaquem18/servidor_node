@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head lang="PT-BR">
+    <meta charset="utf-8">
+    <title>Servidor</title>
+    <link rel="stylesheet" type="text/css" href="/css/index.css">
+  </head>
+  <body>
+    <input type="text" name="pesquisa" class="pesq">
+
+    <div class="list">
+      <% pessoas.forEach(item => { %>
+        <div> <%= item.nome %> </div>
+      <% }); %>
+    </div>
+  </body>
+
+<script>
+const list = document.querySelector('.list');
+const search = document.querySelector('.pesq');
+search.addEventListener('keyup', function() {
+  const url = 'http://localhost:3000/search';
+  const headers = new Headers({"Content-Type": "application/json", "accept": "application/json"});
+  const task = {
+    search: document.querySelector('.pesq').value
+  }
+  const data = JSON.stringify(task);
+  const request = new Request(url, {
+    method: "POST",
+    headers,
+    body: data
+  });
+
+  fetch(request)
+    .then(response => response.json())
+    .then(json => getJson(json))
+});
+
+function getJson(json) {
+  list.innerHTML = '';
+  json = json.pessoas;
+  json.forEach(item => {
+    let newDiv = document.createElement('div');
+    newDiv.innerHTML = `${item.nome}`;
+    list.appendChild(newDiv);
+  });
+
+};
+
+
+
+
+</script>
+</html>
